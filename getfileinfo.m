@@ -13,4 +13,6 @@ c = textscan(str,'%s');
 fileInfo.ModifiedDate = c{1}{16};
 ahold = strcat(c{1}{16},{' '}, c{1}{17});
 fileInfo.ModifiedTime = datestr(datenum(ahold{1}), 'HH:MM');
+
+disp('Well done, buddy')
 end
