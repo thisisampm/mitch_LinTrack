@@ -50,4 +50,13 @@ trace_footprint
 trace_footprints_sessions
 trace_footprints_sessions_overlap(spatial_footprints_corrected, cell_regist_mtx)
 
+
 %% loading data
+
+% finds data located in folder_path and saves it in the mitch_linTrack 
+% matlab folder according to mouse and day
+load_mitchfiles(folderpath);
+
+[behavior_mtx, traces] = load_mitchdata(foldername); %loads data from a mitch-supplied CNMFE and deepLab cut output folder
+
+[traces, frame_times] = load_cnmfe(fp); % load flor traces and timestamps from cnmfe output
