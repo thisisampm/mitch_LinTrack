@@ -2,10 +2,8 @@ function [traces, frame_times] = load_cnmfe(fp)
 % load flor traces and timestamps from cnmfe output
 
 % load traces
-fp
-
-cnmfe_file = get_file_paths_targeted(fp, {'cnmfe'})
-warning('off'); load(cnmfe_file{1}, 'st'); warning('on'); % andrew did something annoying
+cnmfe_file = get_file_paths_targeted(fp, {'cnmfe'});
+warning('off'); load(cnmfe_file{1}, 'st'); warning('on'); % 
 
 % set 'spike' output to binary
 st.S(st.S>0) = 1;
