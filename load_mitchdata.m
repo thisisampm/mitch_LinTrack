@@ -47,11 +47,15 @@ rightCup_xy = nanmean(dlc_out(dlc_out(:,22)>0.99, [20 21])); % right cup
 
 %% Movie frame overlay
 %{
-mov_file = get_file_paths_targeted(foldername, {'.avi'});
-mov = VideoReader(mov_file{1});
-im = readFrame(mov);
+figure; hold on
 
-figure; image(im); hold on
+try
+    mov_file = get_file_paths_targeted(foldername, {'.avi'});
+    mov = VideoReader(mov_file{1});
+    im = readFrame(mov);
+    image(im);
+catch
+end
 
 plot(head_xy(:,1), head_xy(:,2), 'y-')
 plot(leftCup_xy(1), leftCup_xy(2), '.', 'markersize', 50)
@@ -108,14 +112,21 @@ traces = new_flor; clearvars new_flor;
 leftCup_xy = pos_out(1,2:3); rightCup_xy = pos_out(2,2:3);
 
 
+%figure; hold on
+%patch([leftCup_xy(1)-20 rightCup_xy(1)+20 rightCup_xy(1)+20 leftCup_xy(1)-20], [leftCup_xy(2)-30 leftCup_xy(2)-30 leftCup_xy(2)+20 leftCup_xy(2)+20],'r')
+%plot(behavior_mtx(:,2), behavior_mtx(:,3), 'k.'); title hard-cut
+
 %timeidx = behavior_mtx(:,1)>350 & behavior_mtx(:,1)<450;
 %figure; plot3(behavior_mtx(timeidx,2), behavior_mtx(timeidx,3), behavior_mtx(timeidx,1)); title orig
 
 
 
 % delete out of range items
-accepted_area = [0 700 150 250];
+accepted_area = [leftCup_xy(1)-20 rightCup_xy(1)+20 leftCup_xy(2)-30 leftCup_xy(2)+20];
 behavior_mtx = hard_correct_pos(behavior_mtx, accepted_area(1:2), accepted_area(3:4));
+
+
+%figure; plot3(behavior_mtx(:,1), behavior_mtx(:,2), behavior_mtx(:,3), 'k-'); title post-hard-cut
 
 % remove implausible position changes
 behavior_mtx = resample_jumps(behavior_mtx, 800, 200);
