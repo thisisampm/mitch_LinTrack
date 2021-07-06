@@ -40,18 +40,24 @@ for igfolder = 1:size(group_folder_paths,1)
         
         
         % get session folders within mouse folder
-        [sesh_folder_paths, sesh_folder_names] = get_folder_paths_all(mouse_folder_paths{imfolder},1);
+        [sesh_file_paths, sesh_file_names] = get_folder_paths_all(mouse_folder_paths{imfolder},1);
+        
+        
+        % exceptions
+        sesh_file_paths = sesh_file_paths(~contains(sesh_file_names, 'ootprints'));
+        sesh_file_names = sesh_file_names(~contains(sesh_file_names, 'ootprints'));
         
         % iterate through origin session folders
-        for isfolder = 1:size(sesh_folder_paths,1)
+        for isfolder = 1:size(sesh_file_paths,1)
             
             % only save session if not already saved
-            mat_filename = sesh_folder_names{isfolder};
-            save_fn = [dest_mouse_fp '/' mat_filename]
-            if ~exist(save_fn, 'file')
+            mat_filename = sesh_file_names{isfolder};
+            save_fn = [dest_mouse_fp '\' mat_filename]
+            exist([save_fn '.mat'], 'file')
+            if ~exist([save_fn '.mat'], 'file')
                 
                 % load file
-                [behavior_mtx, traces] = load_mitchdata(sesh_folder_paths{isfolder});
+                [behavior_mtx, traces] = load_mitchdata(sesh_file_paths{isfolder});
 
                 % save file
                 save(save_fn, 'behavior_mtx', 'traces')

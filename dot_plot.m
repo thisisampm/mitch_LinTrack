@@ -14,7 +14,9 @@ trl_idx = ~isnan(behavior_mtx(:,4));
 n_idx = (traces(neuron,:,1)==1)';
 
 % plot behavior
-plot(behavior_mtx(trl_idx,2), behavior_mtx(trl_idx,3), '-', 'color', .7.*[1 1 1]); 
+%plot(behavior_mtx(trl_idx,2), behavior_mtx(trl_idx,3), '-', 'color', .7.*[1 1 1]); 
+plot3(behavior_mtx(:,2), behavior_mtx(:,3), behavior_mtx(:,1), '-', 'color', .9.*[1 1 1]);
+plot3(behavior_mtx(trl_idx,2), behavior_mtx(trl_idx,3), behavior_mtx(trl_idx,1), '-', 'color', .7.*[1 1 1]); 
 
 % plot spike locations
 plot(behavior_mtx(trl_idx & n_idx, 2), behavior_mtx(trl_idx & n_idx, 3), 'r.'); 

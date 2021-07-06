@@ -1,4 +1,4 @@
-function [sorted_rate_mtx, rate_mtx] = sort_cell_activity(behavior_mtx, trace_mtx, num_bins)
+function [sorted_rate_mtx, rate_mtx, rate_mtx_3d] = sort_cell_activity(behavior_mtx, trace_mtx, num_bins)
 % plot rate matrix of spatial trial activity for every neuron in traces
 % sort cells by location of FR peak
 %

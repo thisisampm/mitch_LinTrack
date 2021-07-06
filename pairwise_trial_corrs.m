@@ -1,7 +1,7 @@
 function [mean_corr, corr_matrix] = pairwise_trial_corrs(behavior_mtx, trial_rate_mtx)
 % finds correlations between every trial pair
 % input has trials as rows and columns as spatial bins
-% [trial_rate_mtx] = sesh_bin_trl_act(behavior_mtx, trace_mtx, num_bins);
+% [trial_rate_mtx] = sesh_bin_trl_act(behavior_mtx, trace_mtx, num_bins, trial_nums);
 %
 % output is the mean correlation and a correlation matrix
 %
@@ -25,7 +25,10 @@ for i1 = 1:length(unq_trials)
             continue
         end
         
-        corr_matrix(i1,i2) = corr(trial_rate_mtx(:, i1), trial_rate_mtx(:, i2));
+        
+        nnan_idx = ~isnan(trial_rate_mtx(:, i1)) & ~isnan(trial_rate_mtx(:, i2));
+        
+        corr_matrix(i1,i2) = corr(trial_rate_mtx(nnan_idx, i1), trial_rate_mtx(nnan_idx, i2));
        
     end
 end

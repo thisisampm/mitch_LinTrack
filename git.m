@@ -4,6 +4,11 @@ function [cmdout, statout] =  git(varargin)
 %   Short instructions:
 %       Use this exactly as you would use the OS command-line verison of Git.
 %
+
+% git add getfileinfo.m
+% git commit -m "added a meaningless display line"
+% git push LinTrack
+
 %   Long instructions are:
 %       This is not meant to be a comprehensive guide to the near-omnipotent
 %       Git SCM:

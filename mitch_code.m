@@ -15,9 +15,9 @@ dot_plot(behavior_mtx, traces, neuron);
 [trl_act_mtx] = binned_trl_activity(behavior_mtx, trace_col_vect, num_bins);
 
 % pairwise trial activity (for finding place cells)
+trial_rate_mtx = sesh_bin_trl_act(behavior_mtx, traces(:,:,2), 40, unique(behavior_mtx(~isnan(behavior_mtx(:,4)),4)));
+[max_mean_corrs, mean_corrs] = ALL_pairwise_trial_corrs(behavior_mtx, trial_rate_mtx); %THIS ONE
 [mean_corr, corr_matrix] = pairwise_trial_corrs(behavior_mtx, trial_rate_mtx);
-[max_mean_corrs, mean_corrs] = ALL_pairwise_trial_corrs(behavior_mtx, rate_mtx_3d);
-
 
 %% session-level plots
 
@@ -33,12 +33,21 @@ dot_plot(behavior_mtx, traces, neuron);
 % ziv style place cell plots over sessions
 tuning_curve_matrix = common_cell_tuning(session_files, cell_reg_mtx, reference_session);
 tuning_curve_matrix = all_cell_tuning(session_files, cell_reg_mtx, reference_session);
+% load('cell_regist_152-2.mat', 'cell_regist_mtx')
+% sesh_nums = 1:8; 
+% all_sesh = get_file_paths_targeted('C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\data\control\152-2', {'.mat'}); 
+%  % or load('tuning_curve_matrix_152-2.mat', 'tc_mtx_3d')
+% tc_mtx_3d = all_cell_tuning(all_sesh(sesh_nums), cell_regist_mtx(:,sesh_nums), 1);
 
 % bin to bin spatial correlations for each cell, plotted to show session to
 % session averages (z scored raw traces seems to work best)
 sesh_to_sesh_corrs(tuning_curve_matrix, reference_session)
 % [cor_mtx, ebp_ref, ebp_adj] = sesh_to_sesh_corrs(tc_mtx_3d_raw, 1);
 
+
+%% multi subject plots
+all_tcm = all_cell_tuning_multi([ {'152-2'} {'159-2'} ], 'control', 1);
+sesh_to_sesh_corrs_multi(subj_cell, reference_session);
 
 %% cell reg plots
 
