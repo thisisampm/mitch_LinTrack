@@ -28,8 +28,10 @@ function [behavior_mtx, traces] = load_mitchdata(foldername)
 dlc_time_file = get_file_paths_targeted(foldername, {'dlc_time'});
 pos_times = readmatrix(dlc_time_file{1});
 
-% load position deep lab cut xy matrix
+% load position deep lab cut xy matrix (has two different naming
+% conventions, dending on computer used)
 dlc_xy_file = get_file_paths_targeted(foldername, {'behaviourDeepCut'});
+dlc_xy_file = [dlc_xy_file; get_file_paths_targeted(foldername, {'behaviourDLC'})];
 dlc_out = readmatrix(dlc_xy_file{1});
 
 % xy head positions
@@ -66,6 +68,16 @@ plot(rightCup_xy(1), rightCup_xy(2), '.', 'markersize', 50)
 
 %% Resample time
 
+% catch computer glitch where different number of calcium frames than frame
+% times
+if size(traces,2) > size(frame_times,1)
+    warning('glitch; fewer frame times than calcium frames')
+    traces = traces(:,1:size(frame_times,1),:);
+elseif size(traces,2) < size(frame_times,1)
+    warning('glitch; more frame times than calcium frames')
+    frame_times = frame_times(1:size(traces,2),:,:);
+end
+
 % find common time
 min_max_flor_time = [min(frame_times) max(frame_times)];
 min_max_beh_time = [min(behavior_mtx(:,1)) max(behavior_mtx(:,1))];
@@ -95,7 +107,7 @@ for icell = 1:size(traces,1)
     [~,closestIndex] = min(abs(new_times_temp-all_spike_times'));
     new_flor(icell,closestIndex,1) = 1; 
     
-    % load resampled C and C_raw traces
+    % load resampled C and C_raw traces   
     new_flor(icell,:,2) = interp1(frame_times, traces(icell,:,2), behavior_mtx(:,1), 'linear');
     new_flor(icell,:,3) = interp1(frame_times, traces(icell,:,3), behavior_mtx(:,1), 'linear');
     

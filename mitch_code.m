@@ -33,6 +33,9 @@ trial_rate_mtx = sesh_bin_trl_act(behavior_mtx, traces(:,:,2), 40, unique(behavi
 % ziv style place cell plots over sessions
 tuning_curve_matrix = common_cell_tuning(session_files, cell_reg_mtx, reference_session);
 tuning_curve_matrix = all_cell_tuning(session_files, cell_reg_mtx, reference_session);
+% all_tcm = all_cell_tuning_multi([ {'152-2'} {'159-2'} {'167-4'}], 'control', 1);
+
+
 % load('cell_regist_152-2.mat', 'cell_regist_mtx')
 % sesh_nums = 1:8; 
 % all_sesh = get_file_paths_targeted('C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\data\control\152-2', {'.mat'}); 
@@ -40,7 +43,7 @@ tuning_curve_matrix = all_cell_tuning(session_files, cell_reg_mtx, reference_ses
 % tc_mtx_3d = all_cell_tuning(all_sesh(sesh_nums), cell_regist_mtx(:,sesh_nums), 1);
 
 % bin to bin spatial correlations for each cell, plotted to show session to
-% session averages (z scored raw traces seems to work best)
+% session averages (z scored raw traces seem to work best)
 sesh_to_sesh_corrs(tuning_curve_matrix, reference_session)
 % [cor_mtx, ebp_ref, ebp_adj] = sesh_to_sesh_corrs(tc_mtx_3d_raw, 1);
 

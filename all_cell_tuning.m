@@ -2,11 +2,9 @@ function [tuning_curve_matrix_ref, tuning_curve_mtx_all] = all_cell_tuning(sessi
 % plot the tuning curves of cells that are common across all session files
 % sort rows by peak with reference to session number sort_by_sesh
 
-%for session files, try: get_file_paths_targeted('C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\control\152-2', {'.mat'})
-
 % details
 num_spatial_bins = 40;
-traces_type = 3; % S, C, RAW
+traces_type = 2; % S, C, RAW
 
 % input
 num_sessions = size(session_files,1);
@@ -22,6 +20,8 @@ for isesh = 1:num_sessions
     load(session_files{isesh}, 'behavior_mtx', 'traces')
     
     % load tuning curves
+    % inside sort_cell_activity you can set to use L and R runs seperately,
+    % may need to change some preallocated matrices slightly
     [~, unsorted_session_tuning_curves] = sort_cell_activity(behavior_mtx, traces(:,:,traces_type), num_spatial_bins);
     
     % common cells only
