@@ -4,6 +4,9 @@ function [cor_mtx_all, ebp_reference_all, ebp_adjacent_all] = sesh_to_sesh_corrs
 % sesh_to_sesh_corrs but with values averaged within each subject before
 % combining and plotting
 %
+% subj_cell is a cell full of tuning curve matrices, one cell per subj
+% [all_tcm, all_subj_idx, subj_cell] = all_cell_tuning_multi(subject_ids, folder_name, reference_session)
+%
 % try loading subject_cell_ctl2wk.mat for inputs
 %
 

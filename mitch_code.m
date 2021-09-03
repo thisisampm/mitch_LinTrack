@@ -49,8 +49,9 @@ sesh_to_sesh_corrs(tuning_curve_matrix, reference_session)
 
 
 %% multi subject plots
-all_tcm = all_cell_tuning_multi([ {'152-2'} {'159-2'} ], 'control', 1);
+[all_tcm, all_subj_idx, subj_cell] = all_cell_tuning_multi([ {'152-2'} {'159-2'} ], 'control', 1);
 sesh_to_sesh_corrs_multi(subj_cell, reference_session);
+
 
 %% cell reg plots
 

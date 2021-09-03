@@ -1,4 +1,4 @@
-function [all_tcm, all_subj_idx] = all_cell_tuning_multi(subject_ids, folder_name, reference_session)
+function [all_tcm, all_subj_idx, subj_cell] = all_cell_tuning_multi(subject_ids, folder_name, reference_session)
 % plot the tuning curves of cells that are common across all session files
 % sort rows by peak with reference to session number sort_by_sesh
 
