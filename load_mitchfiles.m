@@ -3,11 +3,11 @@ function load_mitchfiles(folderpath)
 % matlab folder according to mouse and day
 %
 % folderpath = 'D:\Projects\InProgress\Mitch_LinTrack\data';
-
+ 
 destination_path = 'C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\data';
 
 % group folders
-[group_folder_paths, group_folder_names] = get_folder_paths_all(folderpath,1);
+[group_folder_paths, group_folder_names] = get_folder_paths_all(folderpath,1)
 
 % ensure destination data folder exists 
 dest_data_fp = [destination_path];
@@ -26,7 +26,7 @@ for igfolder = 1:size(group_folder_paths,1)
     end
     
     % get mouse folders within group folder
-    [mouse_folder_paths, mouse_folder_names] = get_folder_paths_all(group_folder_paths{igfolder},1);
+    [mouse_folder_paths, mouse_folder_names] = get_folder_paths_all(group_folder_paths{igfolder},1)
 
 
     % iterate through mouse folders
@@ -40,7 +40,7 @@ for igfolder = 1:size(group_folder_paths,1)
         
         
         % get session folders within mouse folder
-        [sesh_file_paths, sesh_file_names] = get_folder_paths_all(mouse_folder_paths{imfolder},1);
+        [sesh_file_paths, sesh_file_names] = get_folder_paths_all(mouse_folder_paths{imfolder},1)
         
         
         % exceptions
@@ -57,6 +57,8 @@ for igfolder = 1:size(group_folder_paths,1)
             if ~exist([save_fn '.mat'], 'file')
                 
                 % load file
+                
+                sesh_file_paths{isfolder}
                 [behavior_mtx, traces] = load_mitchdata(sesh_file_paths{isfolder});
 
                 % save file

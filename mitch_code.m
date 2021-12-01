@@ -12,7 +12,7 @@
 dot_plot(behavior_mtx, traces, neuron);
 
 % activity from each trial binned
-[trl_act_mtx] = binned_trl_activity(behavior_mtx, trace_col_vect, num_bins);
+[trl_act_mtx] = binned_trl_activity(behavior_mtx, trace_mtx(ic,:)', 40, unique(behavior_mtx(~isnan(behavior_mtx(:,4)),4)));
 
 % pairwise trial activity (for finding place cells)
 trial_rate_mtx = sesh_bin_trl_act(behavior_mtx, traces(:,:,2), 40, unique(behavior_mtx(~isnan(behavior_mtx(:,4)),4)));
@@ -23,6 +23,7 @@ trial_rate_mtx = sesh_bin_trl_act(behavior_mtx, traces(:,:,2), 40, unique(behavi
 
 % all cells binned trial activity matrices
 [rate_mtx_3d] = sesh_bin_trl_act(behavior_mtx, trace_mtx, num_bins);
+%for ic = 1:size(trial_rate_mtx,3); figure; imagesc(trial_rate_mtx(:,:,ic)); title(num2str(ic)); drawnow; end
 
 % sort activity by peak
 [sorted_rate_mtx, rate_mtx] = sort_cell_activity(behavior_mtx, trace_mtx, num_bins);
@@ -51,6 +52,10 @@ sesh_to_sesh_corrs(tuning_curve_matrix, reference_session)
 %% multi subject plots
 [all_tcm, all_subj_idx, subj_cell] = all_cell_tuning_multi([ {'152-2'} {'159-2'} ], 'control', 1);
 sesh_to_sesh_corrs_multi(subj_cell, reference_session);
+
+% shuffle
+[subj_means_obs, subj_means_shufs] = tuning_curve_mtx_shuf(all_tcm, 1, 100, all_subj_idx);
+
 
 
 %% cell reg plots

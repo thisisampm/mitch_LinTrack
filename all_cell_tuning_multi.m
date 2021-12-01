@@ -48,29 +48,37 @@ for isubj = 1:length(subject_ids)
     subj_cell{isubj} = tuning_curve_matrix;
     subj_idx_cell{isubj} = repmat(isubj,size(tuning_curve_matrix,1),1);
     clearvars cell_regist_mtx tuning_curve_matrix;
+    
+    %subj_idx_cell{isubj}
+    
 end
 %}
 % save cell of all tuning curves
-save('subject_cell.mat', '-v7.3')
-%load('C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\subject_cell_ctl2wk.mat')
+% save('subject_cell.mat', '-v7.3')
+% load('C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\subject_cell_ctl2wk.mat')
 
 
 % combine
 all_tcm = [];
 all_subj_idx = [];
-for isesh = 1:length(subj_cell)
-    all_tcm = [all_tcm; subj_cell{isesh}];
-    all_subj_idx = [all_subj_idx; subj_idx_cell{isesh}];
-    size(all_tcm)
+for isubj = 1:length(subject_ids)
+    all_tcm = [all_tcm; subj_cell{isubj}];
+    all_subj_idx = [all_subj_idx; subj_idx_cell{isubj}];
 end
+
+
 
 % only include cells active during reference session
 all_tcm = all_tcm(~isnan(all_tcm(:,1,reference_session)),:,:);
+all_subj_idx = all_subj_idx(~isnan(all_tcm(:,1,reference_session)));
 
 % sort by peak
 [~,sort_idx] = sort_rows_by_peak(all_tcm(:,:,reference_session));
 all_tcm = all_tcm(sort_idx,:,:);
+
+size(all_subj_idx)
 all_subj_idx = all_subj_idx(sort_idx);
+size(all_subj_idx)
 
 % plot
 figure

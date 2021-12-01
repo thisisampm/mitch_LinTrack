@@ -19,7 +19,8 @@ plot3(behavior_mtx(:,2), behavior_mtx(:,3), behavior_mtx(:,1), '-', 'color', .9.
 plot3(behavior_mtx(trl_idx,2), behavior_mtx(trl_idx,3), behavior_mtx(trl_idx,1), '-', 'color', .7.*[1 1 1]); 
 
 % plot spike locations
-plot(behavior_mtx(trl_idx & n_idx, 2), behavior_mtx(trl_idx & n_idx, 3), 'r.'); 
+plot(behavior_mtx(trl_idx & n_idx, 2), behavior_mtx(trl_idx & n_idx, 3), 'r.'); % trial (red)
+plot(behavior_mtx(~trl_idx & n_idx, 2), behavior_mtx(~trl_idx & n_idx, 3), 'g.'); % non trial (green)
 
 % aesthetics
 axis equal; maze_outline
@@ -48,6 +49,9 @@ for itrl = unq_trials
     plot(behavior_mtx(local_trl_idx & n_idx, 2), behavior_mtx(local_trl_idx & n_idx,1), 'r.'); 
 
 end
+
+% non trial spike locations in green
+plot(behavior_mtx(~trl_idx & n_idx, 2), behavior_mtx(~trl_idx & n_idx,1), 'g.');
 
 % aesthetics
 set(gca, 'TickLength', [0 0])
