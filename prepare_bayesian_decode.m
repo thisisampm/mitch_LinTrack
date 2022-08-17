@@ -26,7 +26,7 @@ trials = trials(~too_long); % Exclude long trials
 trials = trials(direction(~too_long) == 1); % Restrict direction rightward trials
 
 ntrials = numel(trials); % The number of trials included in a session
-training_trials = sort(randperm(ntrials, floor(ntrials*training_fraction)))'; % Randomly select training trials based on the predefined fraction
+training_trials = trials(sort(randperm(ntrials, floor(ntrials*training_fraction)))); % Randomly select training trials based on the predefined fraction
 testing_trials = trials(~ismember(trials,training_trials)); % Designate the remaining trials for testing
 
 % Quickly index all trials by creating a matrix of logical vectors and
@@ -39,10 +39,13 @@ in_testing_trial = logical(sum((behavior_mtx(:,4) == testing_trials'),2)); % Ind
 z_threshold = 2; % Threshold of increase in Ca flour to be registered.
 binarized_traces = extract_binary(zscore_mtx(traces_raw')', sampling_frequency, z_threshold);
 
+binned_position = discretize(behavior_mtx(:,2),n_spatial_bins);
+
 sample_traces_binarized = binarized_traces(:,in_testing_trial)'; % Trace data during sample (testing) trials, output with cells as columns
-sample_true_position = discretize(behavior_mtx(in_testing_trial,2),n_spatial_bins); % True positions to check decoding errors
+% sample_true_position = discretize(behavior_mtx(in_testing_trial,2),n_spatial_bins); % True positions to check decoding errors
+sample_true_position = binned_position(in_testing_trial);
 
 training_traces_binarized = binarized_traces(:, in_training_trial)'; % Ca trace data during training trials
-training_position = discretize(behavior_mtx(in_training_trial,2),n_spatial_bins); % Corresponding spatial positions during training trials
-
+% training_position = discretize(behavior_mtx(in_training_trial,2),n_spatial_bins); % Corresponding spatial positions during training trials
+training_position = binned_position(in_training_trial);
 
