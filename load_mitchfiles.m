@@ -1,10 +1,17 @@
-function load_mitchfiles(folderpath)
+function load_mitchfiles(folderpath, varargin)
 % finds data located in folder_path and saves it in the mitch_linTrack 
 % matlab folder according to mouse and day
 %
 % folderpath = 'D:\Projects\InProgress\Mitch_LinTrack\data';
 
-destination_path = 'C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\data';
+destination_path = 'C:\Users\mitch\OneDrive - University of Toronto\MATLAB\mitch_LinTrack\reload';
+
+if nargin == 2
+    specific_mouse = varargin{1};
+elseif nargin == 3
+    specific_mouse = varargin{1};
+    dest_group = varargin{2};
+end
 
 % group folders
 [group_folder_paths, group_folder_names] = get_folder_paths_all(folderpath,1);
@@ -32,6 +39,13 @@ for igfolder = 1:size(group_folder_paths,1)
     % iterate through mouse folders
     for imfolder = 1:size(mouse_folder_paths,1)
         
+        % If varagin a specfic mouse, skip the others.
+        if exist('specific_mouse','var')
+            if ~strcmp(specific_mouse, mouse_folder_names{imfolder})
+                continue
+            end
+        end
+        
         % ensure distination mouse folder exists 
         dest_mouse_fp = [destination_path '\' group_folder_names{igfolder} '\' mouse_folder_names{imfolder}];
         if ~exist(dest_mouse_fp, 'dir')
@@ -52,7 +66,7 @@ for igfolder = 1:size(group_folder_paths,1)
             
             % only save session if not already saved
             mat_filename = sesh_file_names{isfolder};
-            save_fn = [dest_mouse_fp '\' mat_filename]
+            save_fn = [dest_mouse_fp '\' mat_filename];
             exist([save_fn '.mat'], 'file')
             if ~exist([save_fn '.mat'], 'file')
                 

@@ -11,13 +11,13 @@ nTrials_irradation = [get_nTrials('irradiation\160-2'),...
 
 % Plot as average trial number completed per session
 bar_ax1 = make_bar_plot(nTrials_Control, nTrials_irradation);
-bar_ax1.YLabel.String = 'Average Number of Trials';
+bar_ax1.YLabel.String = 'Average Number of Trials Completed';
 
 % Create line plot of trials each session
 line_ax1 = make_line_plot(nTrials_Control, nTrials_irradation);
 line_ax1.XTickLabel = cellstr(string(1:2:15));
-line_ax1.YLabel = 'Number of Trials Completed';
-line_ax1.XLabel = 'Day';
+line_ax1.YLabel.String = 'Number of Trials Completed';
+line_ax1.XLabel.String = 'Day';
 %% Trial duration
 
 % Load trial duration data
@@ -31,12 +31,12 @@ trial_durations_irradation = [get_trial_duration('irradiation\160-2'),...
 
 % Plot as average trial number completed per session
 bar_ax2 = make_bar_plot(trial_durations_control, trial_durations_irradation);
-bar_ax2.YLabel.String = 'Average Trial Duration';
+bar_ax2.YLabel.String = 'Average Trial Duration (s)';
 
 % Create line plot of trials each session
 line_ax2 = make_line_plot(trial_durations_control, trial_durations_irradation);
 line_ax2.XTickLabel = cellstr(string(1:2:15));
-line_ax2.YLabel.String = 'Trial Duration';
+line_ax2.YLabel.String = 'Trial Duration (s)';
 line_ax2.XLabel.String = 'Day';
 
 %% Functions

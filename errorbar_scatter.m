@@ -7,11 +7,11 @@ function errorbar_scatter(vect_cell, varargin)
 if nargin == 2
     connect = varargin{1};
     xaxis_input = 1:length(vect_cell);
-    colors = distinguishable_colors(length(vect_cell));
+    colors = linspecer(length(vect_cell));
 elseif nargin == 3
     connect = varargin{1};
     xaxis_input = varargin{2};
-    colors = distinguishable_colors(length(vect_cell));
+    colors = linspecer(length(vect_cell));
 elseif nargin == 4
     connect = varargin{1};
     xaxis_input = varargin{2};
@@ -19,7 +19,7 @@ elseif nargin == 4
 else
     connect = 0;
     xaxis_input = 1:length(vect_cell);
-    colors = distinguishable_colors(length(vect_cell));
+    colors = linspecer(length(vect_cell));
 end
 
 

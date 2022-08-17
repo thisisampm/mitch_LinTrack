@@ -6,7 +6,7 @@ function errorbar_plot_multi( cell_e , varargin)
 hold on
 
 % plot dots with colors
-colors = distinguishable_colors(size(cell_e,1));
+colors = linspecer(size(cell_e,1));
 for igrp = 1:size(cell_e,1)
     errorbar_plot_noline(cell_e(igrp,:), [], [], colors(igrp,:))
 end

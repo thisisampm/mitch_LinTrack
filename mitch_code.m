@@ -72,3 +72,6 @@ load_mitchfiles(folderpath);
 [behavior_mtx, traces] = load_mitchdata(foldername); %loads data from a mitch-supplied CNMFE and deepLab cut output folder
 
 [traces, frame_times] = load_cnmfe(fp); % load flor traces and timestamps from cnmfe output
+
+
+

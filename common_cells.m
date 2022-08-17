@@ -1,4 +1,4 @@
-%cell_regist_mtx = cell_registered_struct.cell_to_index_map;
+cell_regist_mtx = cell_registered_struct.cell_to_index_map;
 b = nan(size(cell_regist_mtx,2));
 for i1 = 1:size(cell_regist_mtx,2)
     for i2 = 1:size(cell_regist_mtx,2)

@@ -12,13 +12,15 @@ st.S(st.S>0) = 1;
 traces = nan(size(st.C_raw,1), size(st.C_raw,2), 3);
 traces(:,:,1) = st.S;
 C_hold = st.C; C_hold(C_hold<=0.001)=0; traces(:,:,2) = C_hold;
-traces(:,:,3) = zscore_mtx((st.C_raw)')';
+%traces(:,:,3) = zscore_mtx((st.C_raw)')'; % AMPM's preference
+traces(:,:,3) = st.C_raw; % MDS changed 2022-05-09
 
 % correct curve of raw traces
+%{
 for itrace = 1:size(traces(:,:,3), 1)
    traces(itrace,:,3) = traces_mean_correct(traces(itrace,:,3), 300);
 end
-
+%}
 % load frame times
 pkl_file = get_file_paths_targeted(fp, 'Ca_', 'ime');
 frame_times = readmatrix(pkl_file{1});

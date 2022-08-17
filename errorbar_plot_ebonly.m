@@ -16,7 +16,7 @@ end
 all_mtx = cell2mat(cell_e(:));
 if ~exist('colors', 'var')
     try
-        colors = distinguishable_colors(size(all_mtx,1));
+        colors = linspecer(size(all_mtx,1));
     catch
         colors = repmat(.8.*[1 1 1], size(all_mtx,1), 1);
     end

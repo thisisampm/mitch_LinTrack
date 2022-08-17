@@ -1,5 +1,5 @@
 function [behavior_mtx, traces] = load_mitchdata(foldername)
-%loads data from a mitch-supplied CNMFE and deepLab cut output folder
+%loads data from a CNMFE and deepLab cut output containing folder
 
 %behavior_mtx key
 % col#  data
@@ -25,17 +25,17 @@ function [behavior_mtx, traces] = load_mitchdata(foldername)
 %% Load DEEP LAB CUT output (camera position)
 
 % Load position time
-dlc_time_file = get_file_paths_targeted(foldername, {'dlc_time'});
+dlc_time_file = get_file_paths_targeted(foldername, {'dlc_time','.csv'});
 pos_times = readmatrix(dlc_time_file{1});
 
 % load position deep lab cut xy matrix (has two different naming
 % conventions, dending on computer used)
-dlc_xy_file = get_file_paths_targeted(foldername, {'behaviourDeepCut'});
-dlc_xy_file = [dlc_xy_file; get_file_paths_targeted(foldername, {'behaviourDLC'})];
+dlc_xy_file = get_file_paths_targeted(foldername, {'behaviourDeepCut','.csv'});
+dlc_xy_file = [dlc_xy_file; get_file_paths_targeted(foldername, {'behaviourDLC','.csv'})];
 dlc_out = readmatrix(dlc_xy_file{1});
 
 % xy head positions
-head_xy = dlc_out(:, [5 6]); % head direction
+head_xy = dlc_out(:, [5 6]); % head position (x,y)
 head_xy(dlc_out(:,7)<0.99, :) = nan; % nan low confidence positions
 
 % combine time and position
@@ -71,10 +71,10 @@ plot(rightCup_xy(1), rightCup_xy(2), '.', 'markersize', 50)
 % catch computer glitch where different number of calcium frames than frame
 % times
 if size(traces,2) > size(frame_times,1)
-    warning('glitch; fewer frame times than calcium frames')
+    warning(['glitch; fewer frame times than calcium frames for ', foldername])
     traces = traces(:,1:size(frame_times,1),:);
 elseif size(traces,2) < size(frame_times,1)
-    warning('glitch; more frame times than calcium frames')
+    warning(['glitch; more frame times than calcium frames for ', foldername])
     frame_times = frame_times(1:size(traces,2),:,:);
 end
 
@@ -89,9 +89,10 @@ traces(:, frame_times<min_max_common_time(1) | frame_times>min_max_common_time(2
 frame_times(frame_times<min_max_common_time(1) | frame_times>min_max_common_time(2)) = [];
 
 % resample behavior at 100hz
-frame_times = frame_times - min(behavior_mtx(:,1));
-behavior_mtx(:,1) = behavior_mtx(:,1) - min(behavior_mtx(:,1));
-behavior_mtx = resample_time(behavior_mtx); %100hz
+frame_times = frame_times - min(behavior_mtx(:,1)); % Zero the Ca trace timestamps
+behavior_mtx(:,1) = behavior_mtx(:,1) - min(behavior_mtx(:,1)); % Zero the behaviour timestamps
+new_frame_rate = 20; % 20 Hz
+behavior_mtx = resample_time(behavior_mtx,new_frame_rate); % MDS changed from 100 Hz to 20 Hz 2022-05-13
 
 
 % preallocate resampled flor at 100hz
@@ -108,6 +109,10 @@ for icell = 1:size(traces,1)
     new_flor(icell,closestIndex,1) = 1; 
     
     % load resampled C and C_raw traces   
+    % First and last few timestamp columns may become NaNs because the
+    % frame rates of behaviour and calcium cameras are different so zeroing
+    % by the behaviour camera doesn't necessarily but the trace time to
+    % zero. Could maybe use 'extrap' marker to incorporate those times.
     new_flor(icell,:,2) = interp1(frame_times, traces(icell,:,2), behavior_mtx(:,1), 'linear');
     new_flor(icell,:,3) = interp1(frame_times, traces(icell,:,3), behavior_mtx(:,1), 'linear');
     
@@ -133,8 +138,9 @@ leftCup_xy = pos_out(1,2:3); rightCup_xy = pos_out(2,2:3);
 
 
 
-% delete out of range items
-accepted_area = [leftCup_xy(1)-20 rightCup_xy(1)+20 leftCup_xy(2)-30 leftCup_xy(2)+20];
+% delete out of range items % MDS can come in here and use the measurements
+% from the sensors to produce a more precise rectangle
+accepted_area = [leftCup_xy(1)-20 rightCup_xy(1)+20 leftCup_xy(2)-30 leftCup_xy(2)+13]; % 13 has tuned down from 20 to account for streaks.
 behavior_mtx = hard_correct_pos(behavior_mtx, accepted_area(1:2), accepted_area(3:4));
 
 
@@ -191,7 +197,7 @@ maze_outline
 
 %use reward areas as ends of maze
 min_max_x = [leftCup_xy(1) rightCup_xy(1)];
-x_end_bounds = linspace(min_max_x(1), min_max_x(2), 11);
+x_end_bounds = linspace(min_max_x(1), min_max_x(2), 21); % 2022-05-09 MDS changed 10 bins to 20 to try only cutting out 5% each end
 end_lo = x_end_bounds(2);
 end_hi = x_end_bounds(end-1);
 
@@ -255,7 +261,7 @@ end
 behavior_mtx = [behavior_mtx trial_label];
 
 % trial time bounds
-max_trialduration = 30; %s
+max_trialduration = 10; %s
 num_trials = length(unique(trial_label(~isnan(trial_label))));
 trial_time_bounds = nan(num_trials,2);
 for itrial = 1:num_trials 
@@ -268,8 +274,10 @@ unq_trials = unique(behavior_mtx(~isnan(behavior_mtx(:,4)),4));
 excluded_trials = unq_trials(trial_durations > max_trialduration);
 
 % plot trial paths and durations
-figure; set(gcf, 'Position', [677 373 1065 476])
-sgtitle('Trial behavior')
+figure; set(gcf, 'Position', [25 25 1065 476]) % MDS lowered from 677 373
+mouse_session_str_parts = regexp(foldername,filesep,'split');
+%mouse_session_string = sprintf(
+sgtitle(['Trial behavior ',mouse_session_str_parts{end-1},' ',mouse_session_str_parts{end}]);
 subplot(1,2,1); hold on; 
 plot3(behavior_mtx(:,2), behavior_mtx(:,1), behavior_mtx(:,3), '-', 'color', 0.7.*[1 1 1])
 for itrl = unique(trial_label)'
@@ -283,7 +291,7 @@ for itrl = unique(trial_label)'
     else
         plot3(trl_x, trl_t, trl_y, 'linewidth', 2)
     end
-end
+en
 ylim([-10 inf])
 ylabel('time (s)')
 xlabel('x position')
@@ -323,11 +331,11 @@ for i = 1:length(behavior_mtx(:,2))-time_jump
 end
 maze_length_in_pixels = pdist([leftCup_xy;rightCup_xy]);
 maze_length_in_cm = 91;
-pixels_per_cm = maze_length_in_pixels/maze_length_in_cm;
+pixels_per_cm = maze_length_in_pixels/maze_length_in_cm; % Error is here, maze position has been normalized to 1 already
 pixels_per_cm_over_time_jump = pixels_per_cm*time_jump;
 behavior_mtx(:,5) = velocity_vect;
 behavior_mtx(:,5) = behavior_mtx(:,5).*pixels_per_cm_over_time_jump; %cm/s
-behavior_mtx(:,5) = behavior_mtx(:,5)./100; %m/s
+%behavior_mtx(:,5) = behavior_mtx(:,5)./100; %m/s
 
 
 
@@ -449,9 +457,9 @@ function [timeXY, dists] = resample_jumps(timeXY, too_big_origin, cum_mod)
 
 end
 
-function timeXY = resample_time(timeXY)
+function timeXY = resample_time(timeXY,new_frame_rate)
     %resample time and interpolate new position values
-    mtx(:,1) = (0:0.01:max(timeXY(:,1)))';
+    mtx(:,1) = (0:(1/new_frame_rate):max(timeXY(:,1)))';
     mtx(:,2) = interp1(timeXY(:,1), timeXY(:,2), mtx(:,1), 'linear');
     mtx(:,3) = interp1(timeXY(:,1), timeXY(:,3), mtx(:,1), 'linear');
     timeXY = mtx;

@@ -1,4 +1,4 @@
-function [all_tcm, all_subj_idx] = all_cell_tuning_multi(subject_ids, folder_name, reference_session)
+function [all_tcm, all_subj_idx, subj_cell] = all_cell_tuning_multi(subject_ids, folder_name, reference_session)
 % plot the tuning curves of cells that are common across all session files
 % sort rows by peak with reference to session number sort_by_sesh
 
@@ -6,7 +6,7 @@ function [all_tcm, all_subj_idx] = all_cell_tuning_multi(subject_ids, folder_nam
 
 
 % folder path
-fp = ['C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\data\' folder_name];
+fp = fullfile('C:\Users\mitch\OneDrive - University of Toronto\MATLAB\mitch_LinTrack\', folder_name);
 
 % details
 num_spatial_bins = 40;
@@ -28,7 +28,7 @@ for isubj = 1:length(subject_ids)
     
     % get session file paths and cell reg matrix
     session_files = get_file_paths_targeted([fp '\' subject_ids{isubj}], {'.mat'});
-    cell_regist_mtx_file = session_files(contains(session_files, 'cell_regist'));
+    cell_regist_mtx_file = session_files(contains(session_files, {'cell_regist','cellRegist'}));
         variableInfo = who('-file',cell_regist_mtx_file{1});
         if ismember('cell_regist_mtx', variableInfo)
             load(cell_regist_mtx_file{1}, 'cell_regist_mtx')
@@ -38,7 +38,7 @@ for isubj = 1:length(subject_ids)
         else
             error('bad cell_regist.mat file')
         end
-    session_files = session_files(~contains(session_files, 'cell_regist_mtx'));
+    session_files = session_files(~contains(session_files, {'cell_regist_mtx','cellRegist'}));
 
     % compute tuning curves
     session_files(sesh_nums)
@@ -51,7 +51,7 @@ for isubj = 1:length(subject_ids)
 end
 %}
 % save cell of all tuning curves
-save('subject_cell.mat', '-v7.3')
+%save('subject_cell.mat', '-v7.3')
 %load('C:\Users\ampm1\Documents\MATLAB\mitch_LinTrack\subject_cell_ctl2wk.mat')
 
 

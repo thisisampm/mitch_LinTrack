@@ -25,7 +25,7 @@ end
 all_mtx = cell2mat(cell_e(:));
 if ~exist('colors', 'var')
     try
-        colors = distinguishable_colors(size(all_mtx,1));
+        colors = linspecer(size(all_mtx,1));
     catch
         colors = repmat(.8.*[1 1 1], size(all_mtx,1), 1);
     end
@@ -87,6 +87,7 @@ if connect == 1
     cell_e_mtx = cell2mat(cell_e);
     
     color_ct = 0;
+    colors = linspecer(size(cell_e_mtx,1)); % MDS 2022-03-10
     for subj = 1:size(cell_e_mtx,1)
 
         color_ct = color_ct+1;
