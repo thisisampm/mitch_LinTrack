@@ -3,14 +3,14 @@
 
 %% Perform decoding
 % Across day decoding
-[ctr_mean_error, ctr_median_error, ctr_true_positions, ctr_decoded_positions, ctr_mouse_ids] = decode_by_day1_for_group('control');
-[irr_mean_error, irr_median_error, irr_true_positions, irr_decoded_positions, irr_mouse_ids] = decode_by_day1_for_group('irradiation');
-[run_mean_error, run_median_error, run_true_positions, run_decoded_positions, run_mouse_ids] = decode_by_day1_for_group('exercise');
+[ctr_mean_error, ctr_median_error, ctr_true_positions, ctr_decoded_positions, ctr_mouse_ids] = decode_by_day1_for_group('reload\control');
+[irr_mean_error, irr_median_error, irr_true_positions, irr_decoded_positions, irr_mouse_ids] = decode_by_day1_for_group('reload\irradiation');
+[run_mean_error, run_median_error, run_true_positions, run_decoded_positions, run_mouse_ids] = decode_by_day1_for_group('reload\exercise');
 
-% Same day decoding
-[ctr_sameday_mean_error, ctr_sameday_median_error, ctr_sameday_true_positions, ctr_sameday_decoded_positions, ctr_mouse_ids] = decode_by_sameday_for_group('control');
-[irr_sameday_mean_error, irr_sameday_median_error, irr_sameday_true_positions, irr_sameday_decoded_positions, irr_mouse_ids] = decode_by_sameday_for_group('irradiation');
-[run_sameday_mean_error, run_sameday_median_error, run_sameday_true_positions, run_sameday_decoded_positions, run_mouse_ids] = decode_by_sameday_for_group('exercise');
+%% Same day decoding
+[ctr_sameday_mean_error, ctr_sameday_median_error, ctr_sameday_true_positions, ctr_sameday_decoded_positions, ctr_mouse_ids] = decode_by_sameday_for_group('reload\control');
+[irr_sameday_mean_error, irr_sameday_median_error, irr_sameday_true_positions, irr_sameday_decoded_positions, irr_mouse_ids] = decode_by_sameday_for_group('reload\irradiation');
+[run_sameday_mean_error, run_sameday_median_error, run_sameday_true_positions, run_sameday_decoded_positions, run_mouse_ids] = decode_by_sameday_for_group('reload\exercise');
 
 %% Output folder
 folder = 'C:\Users\mitch\OneDrive - University of Toronto\PhD\Presentations\Lab Meeting & Journal Club\LM6\Figures\Fig3';
@@ -61,10 +61,6 @@ for igroup = 1:numel(group_names)
     sem_day1_err = std_day1_err./sqrt(n_mice);
     eb_day1(igroup) = errorbar(ax,elapsed_time(2:end),mean_day1_err,sem_day1_err,'LineWidth',linewidth,'Color',color_mtx(igroup,:),'CapSize',0);
     %legend(eb_day1,sprintf('%s Day 1 Decoder',group_names{igroup}))
-    
-   
-
-    
 end
 
 for igroup = 1
@@ -87,7 +83,7 @@ ax.TickDir = 'out';
 xlabel('Elapsed Time (days)','FontName','arial','FontSize',8);
 ylabel('Median Decoder Error (cm)', 'FontName','arial','FontSize',8);
 %legend(group_names)
-print(gcf,fullfile(folder,'Fig3_timelapse_decoding'),'-dpdf','-painters')
+%print(gcf,fullfile(folder,'Fig3_timelapse_decoding'),'-dpdf','-painters')
 
 
 
